@@ -7,11 +7,11 @@ Gem::Specification.new do |s|
   s.version     = Cline::VERSION
   s.authors     = ["hibariya"]
   s.email       = ["celluloid.key@gmail.com"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "https://github.com/hibariya/cline"
+  s.summary     = %q{CLI local news}
+  s.description = %q{TBA}
 
-  s.rubyforge_project = "cline"
+  #s.rubyforge_project = "cline"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
