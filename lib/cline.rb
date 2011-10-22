@@ -1,5 +1,9 @@
 require "cline/version"
 
+here = File.dirname(__FILE__)
+$LOAD_PATH.unshift here unless $LOAD_PATH.include?(here)
+
 module Cline
-  # Your code goes here...
+  require 'cline/store'
+  require 'cline/command'
 end

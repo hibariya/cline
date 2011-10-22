@@ -21,4 +21,11 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
   # s.add_runtime_dependency "rest-client"
+
+  s.add_development_dependency 'rake', ['>= 0.9.2']
+  s.add_development_dependency 'ir_b', ['>= 1.4.0']
+  s.add_development_dependency 'tapp', ['>= 1.1.0']
+  s.add_development_dependency 'rspec', ['>= 2.6.0']
+  s.add_development_dependency 'fuubar', ['>= 0.0.6']
+  s.add_development_dependency 'simplecov', ['>= 0.5.3']
 end
