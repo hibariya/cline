@@ -1,8 +1,18 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 
-$LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
+require_relative '../lib/cline'
 
-require 'cline'
+begin
+  Cline::Command.start
+rescue Exception
+  Pathname.new("#{Cline.cline_dir}/log").open('a') do |f|
+    f.puts '---'
+    f.puts Time.now
+    f.puts $!.class
+    f.puts $!.message
+    f.puts $!.backtrace.join("\n")
+  end
 
-Cline::Command.start
+  raise $!
+end
