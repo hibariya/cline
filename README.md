@@ -91,5 +91,5 @@ in ~/.cline/config
 
 ~~~~ruby
   require 'path/to/my_notifier'
-  Cline.out_stream = MyNotifier
+  Cline.out_stream = MyNotifier.new
 ~~~~
