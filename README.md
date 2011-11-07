@@ -93,4 +93,3 @@ in ~/.cline/config
   require 'path/to/my_notifier'
   Cline.out_stream = MyNotifier
 ~~~~
-
