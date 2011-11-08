@@ -8,7 +8,12 @@ module Cline::Fetchers
 
       entries.each do |entry|
         message = "#{entry.title} #{entry.url}"
-        Cline::Notification.tap {|n| n.find_by_message(message) || n.create(message: message, time: entry.published) }
+
+        begin
+          Cline::Notification.tap {|n| n.find_by_message(message) || n.create(message: message, time: entry.published) }
+        rescue ActiveRecord::StatementInvalid => e
+          puts e.class, e.message
+        end
       end
     end
 
