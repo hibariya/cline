@@ -12,6 +12,14 @@ module Cline
 
     scope :displayed, where('display_count > 0')
 
+    def message=(m)
+      super normalize_message(m)
+    end
+
+    def normalize_message(m)
+      m.gsub(/[\r\n]/, '')
+    end
+
     class << self
       def display(offset)
         earliest(1, offset).first.display
