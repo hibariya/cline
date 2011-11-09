@@ -30,6 +30,21 @@ describe Cline::Notification do
     it { should == [notification2] }
   end
 
+  describe '#message=' do
+    let(:notification) { Fabricate(:notification, display_count: 0) }
+
+    before do
+      notification.message = <<-EOM
+        line feed
+        spoooooky
+      EOM
+    end
+
+    subject { notification }
+
+    its(:message) { should_not match /\n/ }
+  end
+
   describe '#display' do
     let!(:notification) { Fabricate(:notification, display_count: 0) }
 
