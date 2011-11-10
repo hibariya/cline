@@ -7,10 +7,12 @@ module Cline::Fetchers
         entries = new(opml_path.read).fetch
 
         entries.each do |entry|
-          message = "#{entry.title} #{entry.url}"
-
           begin
-            Cline::Notification.tap {|n| n.find_by_message(message) || n.create(message: message, time: entry.published) }
+            Cline::Notification.instance_exec entry do |entry|
+              message = normalize_message("#{entry.title} #{entry.url}").encode(Encoding::UTF_8)
+
+              find_by_message(message) || create(message: message, time: entry.published)
+            end
           rescue ActiveRecord::StatementInvalid => e
             puts e.class, e.message
           end
@@ -34,14 +36,19 @@ module Cline::Fetchers
       entries = []
 
       @feeds.map { |feed_url|
-        Thread.fork do
+        Thread.fork {
           begin
             feed = Feedzirra::Feed.fetch_and_parse(feed_url)
-            entries += feed.entries if feed.is_a? Feedzirra::FeedUtilities
+
+            if feed.is_a?(Feedzirra::FeedUtilities)
+              feed.entries.each { |entry| entries << entry }
+            end
           rescue
             puts $!.class, $!.message
+          ensure
+            Thread.pass
           end
-        end
+        }
       }.map(&:join)
 
       entries
