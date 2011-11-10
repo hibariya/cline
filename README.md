@@ -6,10 +6,10 @@
   gem install cline
   cline init
   echo "Cline.out_stream = Cline::OutStreams::WithGrowl.new($stdout)" > ~/.cline/config # growlnotify required
-  echo "Cline.fetchers  << Cline::Fetchers::Feed" >> ~/.cline/config
+  echo "Cline.collectors  << Cline::Collector::Feed" >> ~/.cline/config
   curl http://foo.examle.com/url/to/opml.xml > ~/.cline/feeds.xml
 
-  cline fetch
+  cline collect
   cline tick --offset 0 --interval 5
 ~~~~
 
@@ -31,21 +31,21 @@ in ~/.screenrc
 
 ## Reload
 
-`fetch`command fetch new notifications from `Cline.fetchers`.
+`collect`command collect new notifications from `Cline.collectors`.
 
 ~~~~
-  cline fetch
+  cline collect
 ~~~~
 
-### Custom Fetcher
+### Custom Collector
 
-*fetcher* required `fetch` method.
+*collector* required `collect` method.
 
 example:
 
 ~~~~ruby
-  class MyFetcher
-    def self.fetch
+  class MyCollector
+    def self.collect
       new.sources.each do |source|
         Cline::Notification.find_by_message(source.body) || Cline::Notification.create!(message: source.body, time: source.created_at)
       end
@@ -62,8 +62,8 @@ example:
 in ~/.cline/config
 
 ~~~~ruby
-  require 'path/to/my_fetcher'
-  Cline.fetchers << MyFetcher
+  require 'path/to/my_collector'
+  Cline.collectors << MyCollector
 ~~~~
 
 ## Notifier

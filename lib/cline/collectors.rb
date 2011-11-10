@@ -1,10 +1,10 @@
 # coding: utf-8
 
-module Cline::Fetchers
+module Cline::Collectors
   class Feed
     class << self
-      def fetch
-        entries = new(opml_path.read).fetch
+      def collect
+        entries = new(opml_path.read).collect
 
         entries.each do |entry|
           begin
@@ -32,7 +32,7 @@ module Cline::Fetchers
       @feeds = parse_opml(@opml.elements['opml/body'])
     end
 
-    def fetch
+    def collect
       entries = []
 
       @feeds.map { |feed_url|

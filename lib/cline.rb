@@ -43,8 +43,8 @@ module Cline
       @out_stream = stream
     end
 
-    fetchers = []
-    define_method(:fetchers) { fetchers }
+    collectors = []
+    define_method(:collectors) { collectors }
   end
 end
 
@@ -57,5 +57,5 @@ require 'active_record'
 require "cline/version"
 require "cline/notification"
 require "cline/command"
-require "cline/fetchers"
+require "cline/collectors"
 require "cline/out_streams"

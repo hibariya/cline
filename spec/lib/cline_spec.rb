@@ -7,13 +7,13 @@ describe Cline do
     let(:config) { Pathname.new(Cline.cline_dir).join('config') }
 
     before do
-      config.open('w') {|f| f.puts "Cline.fetchers  << Cline::Fetchers::Feed" }
+      config.open('w') {|f| f.puts "Cline.collectors  << Cline::Collectors::Feed" }
 
       Cline.boot
     end
 
     specify "config file should loaded" do
-      Cline.fetchers.should include Cline::Fetchers::Feed
+      Cline.collectors.should include Cline::Collectors::Feed
     end
 
     after do

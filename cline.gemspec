@@ -11,6 +11,21 @@ Gem::Specification.new do |s|
   s.summary     = %q{CLI Line Notifier}
   s.description = %q{Cline - CLI Line Notifier}
 
+  s.post_install_message = <<-EOM
+    **Important** Some APIs name have changed.
+
+      s/fetch/collect/g
+
+      * Command
+        $ cline fetch
+          => $ cline collect
+
+      * Classes And Modules
+        Cline.fechers   => Cline.collectors
+        Cline::Fetchers => Cline::Collectors
+        Cline::Fetchers::Feed.fetch => Cline::Fetchers::Feed.collect
+  EOM
+
   #s.rubyforge_project = "cline"
 
   s.files         = `git ls-files`.split("\n")

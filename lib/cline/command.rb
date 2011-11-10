@@ -10,7 +10,7 @@ module Cline
     map '-s' => :show,
         '-t' => :tick,
         '-s' => :status,
-        '-f' => :fetch,
+        '-c' => :collect,
         '-i' => :init,
         '-v' => :version
 
@@ -35,9 +35,9 @@ module Cline
       say "total     : #{Notification.count}", :cyan
     end
 
-    desc 'fetch', 'Fetch sources'
-    def fetch
-      Cline.fetchers.each &:fetch
+    desc 'collect', 'Collect sources'
+    def collect
+      Cline.collectors.each &:collect
     end
 
     desc 'init', 'Init database'
