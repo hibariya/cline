@@ -12,18 +12,15 @@ Gem::Specification.new do |s|
   s.description = %q{Cline - CLI Line Notifier}
 
   s.post_install_message = <<-EOM
-    **Important** Some APIs name have changed.
+    **Important** Some features were added.
 
-      s/fetch/collect/g
+    * New collector (GitHub News Feed) is available.
+      $ echo "Cline.collectors << Cline::Collectors::Github" >> ~/.cline/config
+      $ echo "Cline::Collectors::Github.login_name = 'your_github_login'" >> ~/.cline/config
 
-      * Command
-        $ cline fetch
-          => $ cline collect
-
-      * Classes And Modules
-        Cline.fechers   => Cline.collectors
-        Cline::Fetchers => Cline::Collectors
-        Cline::Fetchers::Feed.fetch => Cline::Fetchers::Feed.collect
+    * `search` command is available.
+      usage:
+        $ cline search [keyword]
   EOM
 
   #s.rubyforge_project = "cline"
