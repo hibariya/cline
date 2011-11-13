@@ -1,7 +1,18 @@
 # coding: utf-8
 
+require 'notify'
+
 module Cline::OutStreams
-  class WithGrowl
+  def self.const_missing(name)
+    case name
+    when :WithGrowl
+      WithNotify
+    else
+      super
+    end
+  end
+
+  class WithNotify
     attr_reader:stream
 
     def initialize(stream = $stdout)
@@ -10,17 +21,13 @@ module Cline::OutStreams
 
     def puts(str)
       puts_stream str
-      puts_growlnotify str
+      Notify.notify '', str
     end
 
     private
 
     def puts_stream(str)
       stream.puts str
-    end
-
-    def puts_growlnotify(str)
-      `growlnotify -m '#{str}'`
     end
   end
 end
