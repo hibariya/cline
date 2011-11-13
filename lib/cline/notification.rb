@@ -6,6 +6,10 @@ module Cline
     validate :message, presence: true, uniqueness: true
     validate :display_count, presence: true, numerically: true
 
+    scope :by_keyword, ->(word) {
+      where('message like ?', "%#{word}%").order('time DESC, display_count')
+    }
+
     scope :earliest, ->(limit = 1, offset = 0) {
       order('display_count, time').limit(limit).offset(offset)
     }

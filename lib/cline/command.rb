@@ -7,12 +7,13 @@ module Cline
       super
     end
 
-    map '-s' => :show,
-        '-t' => :tick,
-        '-s' => :status,
-        '-c' => :collect,
-        '-i' => :init,
-        '-v' => :version
+    map '-s'  => :show,
+        '-t'  => :tick,
+        '-sr' => :search,
+        '-st' => :status,
+        '-c'  => :collect,
+        '-i'  => :init,
+        '-v'  => :version
 
     desc 'show', 'Show a latest message'
     method_options offset: :integer
@@ -26,6 +27,14 @@ module Cline
       loop do
         show offset
         sleep interval.to_i
+      end
+    end
+
+    desc 'search', 'Search by query'
+    method_options query: :string
+    def search(keyword = optoins[:query])
+      Notification.by_keyword(keyword).each do |notification|
+        say notification.display_message
       end
     end
 
