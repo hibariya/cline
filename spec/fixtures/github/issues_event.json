@@ -1,0 +1,59 @@
+{
+  "type": "IssuesEvent",
+  "public": true,
+  "org": {
+    "gravatar_id": "d41d8cd98f00b204e9800998ecf8427e",
+    "id": 845682,
+    "url": "https://api.github.com/orgs/",
+    "login": "pry"
+  },
+  "created_at": "2011-11-12T03:32:42Z",
+  "payload": {
+    "action": "closed",
+    "issue": {
+      "number": 336,
+      "pull_request": {
+        "diff_url": null,
+        "patch_url": null,
+        "html_url": null
+      },
+      "created_at": "2011-11-12T03:04:58Z",
+      "title": "wherami hook should use run_command",
+      "comments": 1,
+      "body": "currently using process_line, but should use `_pry_.run_command` instead",
+      "updated_at": "2011-11-12T03:32:40Z",
+      "url": "https://api.github.com/repos/pry/pry/issues/336",
+      "id": 2215683,
+      "assignee": null,
+      "milestone": null,
+      "closed_at": "2011-11-12T03:32:40Z",
+      "labels": [
+        {
+          "name": "refactor",
+          "url": "https://api.github.com/repos/pry/pry/labels/refactor",
+          "color": "c235de"
+        }
+      ],
+      "html_url": "https://github.com/pry/pry/issues/336",
+      "user": {
+        "gravatar_id": "890f7065d081f3a735362b6a1ca74b92",
+        "avatar_url": "https://secure.gravatar.com/avatar/890f7065d081f3a735362b6a1ca74b92?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png",
+        "url": "https://api.github.com/users/banister",
+        "id": 17518,
+        "login": "banister"
+      },
+      "state": "closed"
+    }
+  },
+  "repo": {
+    "id": 1145832,
+    "url": "https://api.github.com/repos/pry/pry",
+    "name": "pry/pry"
+  },
+  "actor": {
+    "gravatar_id": "46d1ebbb28ce0f4a8f2c77b6d3d95829",
+    "id": 94272,
+    "url": "https://api.github.com/users/ConradIrwin",
+    "login": "ConradIrwin"
+  }
+}

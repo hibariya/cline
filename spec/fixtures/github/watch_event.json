@@ -1,0 +1,22 @@
+{
+  "type": "WatchEvent",
+  "public": true,
+  "org": {
+    "url": "https://api.github.com/orgs/"
+  },
+  "created_at": "2011-11-12T00:14:11Z",
+  "payload": {
+    "action": "started"
+  },
+  "repo": {
+    "id": 2330932,
+    "url": "https://api.github.com/repos/jasonm/backbone-js-on-rails-talk",
+    "name": "jasonm/backbone-js-on-rails-talk"
+  },
+  "actor": {
+    "gravatar_id": "eabad423977cfc6873b8f5df62b848a6",
+    "id": 12301,
+    "url": "https://api.github.com/users/hsbt",
+    "login": "hsbt"
+  }
+}

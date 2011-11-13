@@ -1,0 +1,26 @@
+{
+  "actor": {
+    "gravatar_id": "1a3fec33b61038721fd4e609c1d1a4b7",
+    "id": 257678,
+    "url": "https://api.github.com/users/gabebw",
+    "login": "gabebw"
+  },
+  "type": "DeleteEvent",
+  "public": true,
+  "org": {
+    "gravatar_id": "a95a04df2dae60397c38c9bd04492c53",
+    "id": 6183,
+    "url": "https://api.github.com/orgs/",
+    "login": "thoughtbot"
+  },
+  "repo": {
+    "id": 2144417,
+    "url": "https://api.github.com/repos/thoughtbot/kumade",
+    "name": "thoughtbot/kumade"
+  },
+  "created_at": "2011-11-11T14:00:19Z",
+  "payload": {
+    "ref_type": "branch",
+    "ref": "clean-up-cucumber"
+  }
+}
