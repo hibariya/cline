@@ -42,8 +42,7 @@ module Cline::Collectors
       return unless act
 
       event_string = act.type.gsub(/Event/i, '')
-      message      = Cline::Notification.normalize_message("#{event_string}: #{act.actor} #{act.action} #{act.url}")
-      message.encode(Encoding::UTF_8)
+      Cline::Notification.normalize_message("#{event_string}: #{act.actor} #{act.action} #{act.url}")
     end
 
     def extract_activity(event)

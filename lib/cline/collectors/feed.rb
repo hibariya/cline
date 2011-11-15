@@ -5,7 +5,7 @@ module Cline::Collectors
     class << self
       def collect
         new(opml_path.read).entries.each do |entry|
-          message = Cline::Notification.normalize_message("#{entry.title} #{entry.url}").encode(Encoding::UTF_8)
+          message = Cline::Notification.normalize_message("#{entry.title} #{entry.url}")
           create_or_pass message, entry.published
         end
       end
