@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
       > DROP TABLE notifications;
       > ALTER TABLE tmp_notifications RENAME TO notifications;
       > COMMIT;
-      >.q
+      > .q
   EOM
 
   #s.rubyforge_project = "cline"
