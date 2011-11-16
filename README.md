@@ -7,6 +7,7 @@
   cline init
   echo "Cline.out_stream = Cline::OutStreams::WithGrowl.new($stdout)" > ~/.cline/config # growlnotify required
   echo "Cline.collectors  << Cline::Collector::Feed" >> ~/.cline/config
+  echo "Cline.pool_size   << 2000" >> ~/.cline/config
   curl http://foo.examle.com/url/to/opml.xml > ~/.cline/feeds.xml
 
   cline collect
