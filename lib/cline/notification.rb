@@ -2,16 +2,16 @@
 
 module Cline
   class Notification < ActiveRecord::Base
-    validate :time, presence: true
+    validate :notified_at, presence: true
     validate :message, presence: true, uniqueness: true
     validate :display_count, presence: true, numerically: true
 
     scope :by_keyword, ->(word) {
-      where('message like ?', "%#{word}%").order('time DESC, display_count')
+      where('message like ?', "%#{word}%").order('notified_at DESC, display_count')
     }
 
     scope :earliest, ->(limit = 1, offset = 0) {
-      order_by_default_priority_for_display.order('time ASC').limit(limit).offset(offset)
+      order_by_default_priority_for_display.order('notified_at ASC').limit(limit).offset(offset)
     }
 
     scope :order_by_default_priority_for_display, order(:display_count)
@@ -33,7 +33,7 @@ module Cline
 
       def clean(pool_size)
         order_by_default_priority_for_display.
-          order('time DESC').
+          order('notified_at DESC').
           offset(pool_size).
           destroy_all
       end
@@ -46,7 +46,7 @@ module Cline
     end
 
     def display_message
-      "[#{time}][#{display_count}] #{message}"
+      "[#{notified_at}][#{display_count}] #{message}"
     end
   end
 end

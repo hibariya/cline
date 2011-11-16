@@ -4,8 +4,8 @@ module Cline::Collectors
   class Github < Base
     class << self
       def collect
-        new(login_name).activities.each do |message, time|
-          create_or_pass message, time
+        new(login_name).activities.each do |message, notified_at|
+          create_or_pass message, notified_at
         end
       end
 

@@ -4,9 +4,9 @@ require_relative '../spec_helper'
 
 describe Cline::Notification do
   describe '.ealiest' do
-    let!(:notification1) { Fabricate(:notification, time: 2.days.ago.beginning_of_day, display_count: 3) }
-    let!(:notification2) { Fabricate(:notification, time: 3.days.ago.beginning_of_day, display_count: 3) }
-    let!(:notification3) { Fabricate(:notification, time: 3.days.ago.beginning_of_day, display_count: 2) }
+    let!(:notification1) { Fabricate(:notification, notified_at: 2.days.ago.beginning_of_day, display_count: 3) }
+    let!(:notification2) { Fabricate(:notification, notified_at: 3.days.ago.beginning_of_day, display_count: 3) }
+    let!(:notification3) { Fabricate(:notification, notified_at: 3.days.ago.beginning_of_day, display_count: 2) }
 
     context 'default(limit 1 offset 0)' do
       subject { Cline::Notification.earliest.all }

@@ -56,7 +56,7 @@ module Cline
       ActiveRecord::Base.connection.create_table(:notifications) do |t|
         t.text     :message, null: false, default: ''
         t.integer  :display_count, null: false, default: 0
-        t.datetime :time, null: false
+        t.datetime :notified_at, null: false
       end
     end
 

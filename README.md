@@ -47,7 +47,7 @@ example:
   class MyCollector
     def self.collect
       new.sources.each do |source|
-        Cline::Notification.find_by_message(source.body) || Cline::Notification.create!(message: source.body, time: source.created_at)
+        Cline::Notification.find_by_message(source.body) || Cline::Notification.create!(message: source.body, notified_at: source.created_at)
       end
     end
 

@@ -3,12 +3,12 @@
 module Cline::Collectors
   class Base
     class << self
-      def create_or_pass(message, time)
-        message = message.encode(Encoding::UTF_8)
-        time    = parse_time_string_if_needed(time)
+      def create_or_pass(message, notified_at)
+        message     = message.encode(Encoding::UTF_8)
+        notified_at = parse_time_string_if_needed(notified_at)
 
-        Cline::Notification.instance_exec message, time do |message, time|
-          create(message: message, time: time) unless find_by_message_and_time(message, time)
+        Cline::Notification.instance_exec message, notified_at do |message, notified_at|
+          create(message: message, notified_at: notified_at) unless find_by_message_and_notified_at(message, notified_at)
         end
       rescue ActiveRecord::StatementInvalid => e
         puts e.class, e.message
