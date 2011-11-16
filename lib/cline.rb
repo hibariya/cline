@@ -43,6 +43,14 @@ module Cline
       @out_stream = stream
     end
 
+    def pool_size
+      @pool_size
+    end
+
+    def pool_size=(pool_size)
+      @pool_size = pool_size
+    end
+
     collectors = []
     define_method(:collectors) { collectors }
   end

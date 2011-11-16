@@ -11,8 +11,10 @@ module Cline
     }
 
     scope :earliest, ->(limit = 1, offset = 0) {
-      order('display_count, time').limit(limit).offset(offset)
+      order_by_default_priority_for_display.order('time ASC').limit(limit).offset(offset)
     }
+
+    scope :order_by_default_priority_for_display, order(:display_count)
 
     scope :displayed, where('display_count > 0')
 
@@ -27,6 +29,13 @@ module Cline
 
       def normalize_message(m)
         m.gsub(/[\r\n]/, '')
+      end
+
+      def clean(pool_size)
+        order_by_default_priority_for_display.
+          order('time DESC').
+          offset(pool_size).
+          destroy_all
       end
     end
 

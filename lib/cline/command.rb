@@ -47,6 +47,8 @@ module Cline
     desc 'collect', 'Collect sources'
     def collect
       Cline.collectors.each &:collect
+
+      clean_obsoletes if Cline.pool_size
     end
 
     desc 'init', 'Init database'
@@ -61,6 +63,12 @@ module Cline
     desc 'version', 'Show version.'
     def version
       say "cline version #{Cline::VERSION}"
+    end
+
+    private
+
+    def clean_obsoletes
+      Notification.clean Cline.pool_size
     end
   end
 end
