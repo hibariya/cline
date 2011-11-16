@@ -31,8 +31,11 @@ module Cline::Collectors
       events = JSON.parse(@api_url.read)
 
       events.map { |event|
-        [extract_message(event), event['created_at']]
-      }
+        message = extract_message(event)
+        next unless message
+
+        [message, event['created_at']]
+      }.compact
     end
 
     private
