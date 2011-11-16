@@ -11,6 +11,7 @@ In shell:
 ~~~~
 
 In sqlite3 prompt:
+
 ~~~~
   BEGIN TRANSACTION;
   CREATE TABLE "tmp_notifications" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "message" text DEFAULT '' NOT NULL, "display_count" integer DEFAULT 0 NOT NULL, "notified_at" datetime NOT NULL);
