@@ -1,27 +1,5 @@
 # Cline - CLI Line Notifier
 
-## **Important** Data schema has changed on version 0.2.3
-
-Please try following commands:
-
-In shell:
-
-~~~~
-  $ sqlite3 ~/.cline/cline.sqlite3
-~~~~
-
-In sqlite3 prompt:
-
-~~~~
-  BEGIN TRANSACTION;
-  CREATE TABLE "tmp_notifications" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "message" text DEFAULT '' NOT NULL, "display_count" integer DEFAULT 0 NOT NULL, "notified_at" datetime NOT NULL);
-  INSERT INTO tmp_notifications SELECT id, message, display_count, time as notified_at FROM notifications;
-  DROP TABLE notifications;
-  ALTER TABLE tmp_notifications RENAME TO notifications;
-  COMMIT;
-  .q
-~~~~
-
 ## Installation
 
 ~~~~
