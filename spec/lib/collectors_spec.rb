@@ -2,6 +2,41 @@
 
 require_relative '../spec_helper'
 
+describe Cline::Collectors::Base do
+  describe '.oldest_notification' do
+    let(:oldest_notified_at) { 100.days.ago }
+
+    before do
+      Cline::Collectors::Base.send :reset_oldest_notification
+      Cline::Notification.create(message: 'awesome', notified_at: oldest_notified_at)
+    end
+
+    context 'too old notification' do
+      before do
+        flunk unless Cline::Notification.count == 1
+
+        Cline::Collectors::Base.create_or_pass('too old', oldest_notified_at - 1.day)
+      end
+
+      subject { Cline::Notification.count }
+
+      it { should == 1 }
+    end
+
+    context 'newly notification' do
+      before do
+        flunk unless Cline::Notification.count == 1
+
+        Cline::Collectors::Base.create_or_pass('newly', oldest_notified_at + 1.day)
+      end
+
+      subject { Cline::Notification.count }
+
+      it { should == 2 }
+    end
+  end
+end
+
 describe Cline::Collectors::Github do
   shared_examples_for 'created_at should present from github event json' do
     it { json['created_at'].should_not be_nil }
