@@ -11,12 +11,18 @@ module Cline
     }
 
     scope :earliest, ->(limit = 1, offset = 0) {
-      order_by_default_priority_for_display.order('notified_at ASC').limit(limit).offset(offset)
+      order_by_default_priority_for_display.order(:notified_at).limit(limit).offset(offset)
     }
 
     scope :order_by_default_priority_for_display, order(:display_count)
 
     scope :displayed, where('display_count > 0')
+
+    scope :recent_notified, ->(limit = 1) {
+      n = earliest.first
+      where('display_count > ? AND notified_at <= ?', n.display_count, n.notified_at).
+        order(:display_count).order('notified_at DESC')
+    }
 
     def message=(m)
       super Notification.normalize_message(m)

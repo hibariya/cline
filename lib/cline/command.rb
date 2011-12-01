@@ -60,6 +60,14 @@ module Cline
       end
     end
 
+    desc 'recent', 'Show recent notification'
+    method_options limit: :integer
+    def recent(limit = options[:limit] || 1)
+      Notification.recent_notified.limit(limit).each do |notification|
+        say notification.display_message
+      end
+    end
+
     desc 'version', 'Show version.'
     def version
       say "cline version #{Cline::VERSION}"
