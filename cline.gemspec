@@ -11,36 +11,8 @@ Gem::Specification.new do |s|
   s.summary     = %q{CLI Line Notifier}
   s.description = %q{Cline - CLI Line Notifier}
 
-  s.post_install_message = <<-EOM
-    **Important** Some features were added.
-
-    * New collector (GitHub News Feed) is available.
-      $ echo "Cline.collectors << Cline::Collectors::Github" >> ~/.cline/config
-      $ echo "Cline::Collectors::Github.login_name = 'your_github_login'" >> ~/.cline/config
-
-    * `search` command is available.
-      usage:
-        $ cline search [keyword]
-
-    * Garbage collector is available.
-      Garbage collector will work after `cline collect`.
-      It requires Cline.pool_size.
-
-      example:
-        $ echo "Cline.pool_size = 2000" >> ~/.cline/config
-
-    * Data schema has changed!
-      Please try following commands:
-
-      $ sqlite3 ~/.cline/cline.sqlite3
-      > BEGIN TRANSACTION;
-      > CREATE TABLE "tmp_notifications" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "message" text DEFAULT '' NOT NULL, "display_count" integer DEFAULT 0 NOT NULL, "notified_at" datetime NOT NULL);
-      > INSERT INTO tmp_notifications SELECT id, message, display_count, time as notified_at FROM notifications;
-      > DROP TABLE notifications;
-      > ALTER TABLE tmp_notifications RENAME TO notifications;
-      > COMMIT;
-      > .q
-  EOM
+  #s.post_install_message = <<-EOM
+  #EOM
 
   #s.rubyforge_project = "cline"
 
