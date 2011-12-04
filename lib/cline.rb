@@ -63,6 +63,7 @@ require 'sqlite3'
 require 'active_record'
 
 require "cline/version"
+require "cline/configure"
 require "cline/notification"
 require "cline/command"
 require "cline/collectors"
