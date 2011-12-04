@@ -11,10 +11,8 @@ module Cline
     }
 
     scope :earliest, ->(limit = 1, offset = 0) {
-      order_by_default_priority_for_display.order(:notified_at).limit(limit).offset(offset)
+      order(:display_count).order(:notified_at).limit(limit).offset(offset)
     }
-
-    scope :order_by_default_priority_for_display, order(:display_count)
 
     scope :displayed, where('display_count > 0')
 
@@ -38,8 +36,8 @@ module Cline
       end
 
       def clean(pool_size)
-        order_by_default_priority_for_display.
           order('notified_at DESC').
+          order(:display_count).
           offset(pool_size).
           destroy_all
       end
