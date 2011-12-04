@@ -48,7 +48,7 @@ module Cline
     def collect
       Cline.collectors.each &:collect
 
-      clean_obsoletes if Cline.pool_size
+      clean_obsoletes
     end
 
     desc 'init', 'Init database'
@@ -76,7 +76,7 @@ module Cline
     private
 
     def clean_obsoletes
-      Notification.clean Cline.pool_size
+      Notification.clean(Cline.pool_size) if Cline.pool_size
     end
   end
 end
