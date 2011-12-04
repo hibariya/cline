@@ -29,8 +29,9 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    Cline.boot
-    Cline.out_stream = StringIO.new
     Cline::Notification.delete_all
+    Cline.out_stream = StringIO.new
+
+    Cline.boot
   end
 end

@@ -5,7 +5,7 @@ require_relative '../spec_helper'
 describe Cline::Notification do
   describe '.ealiest' do
     let!(:notification1) { Fabricate(:notification, notified_at: 2.days.ago.beginning_of_day, display_count: 3) }
-    let!(:notification2) { Fabricate(:notification, notified_at: 3.days.ago.beginning_of_day, display_count: 3) }
+    let!(:notification2) { Fabricate(:notification, notified_at: 2.days.ago.beginning_of_day, display_count: 2) }
     let!(:notification3) { Fabricate(:notification, notified_at: 3.days.ago.beginning_of_day, display_count: 2) }
 
     context 'default(limit 1 offset 0)' do
@@ -28,6 +28,48 @@ describe Cline::Notification do
     subject { Cline::Notification.displayed.all }
 
     it { should == [notification2] }
+  end
+
+  describe '.clean' do
+    let!(:notification1) { Fabricate(:notification, notified_at: 3.days.ago.beginning_of_day, display_count: 3) }
+    let!(:notification2) { Fabricate(:notification, notified_at: 3.days.ago.beginning_of_day, display_count: 2) }
+    let!(:notification3) { Fabricate(:notification, notified_at: 2.days.ago.beginning_of_day, display_count: 2) }
+
+    context 'pool_size 2' do
+      before do
+        Cline::Notification.clean 2
+      end
+
+      subject { Cline::Notification.all }
+
+      its(:length) { should == 2 }
+      it { should include notification2 }
+      it { should include notification3 }
+    end
+
+    context 'pool_size 1' do
+      before do
+        Cline::Notification.clean 1
+      end
+
+      subject { Cline::Notification.all }
+
+      its(:length) { should == 1 }
+      it { should include notification3 }
+    end
+  end
+
+  describe '.recent_notified' do
+    let!(:notification1) { Fabricate(:notification, notified_at: 3.days.ago.beginning_of_day, display_count: 0) }
+    let!(:notification2) { Fabricate(:notification, notified_at: 2.days.ago.beginning_of_day, display_count: 0) }
+
+    before do
+      Cline::Notification.display 0
+    end
+
+    subject { Cline::Notification.recent_notified(1).all }
+
+    it { should == [notification1] }
   end
 
   describe '#message=' do
