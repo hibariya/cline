@@ -5,3 +5,4 @@ pkg/*
 coverage
 spec/tmp/*
 tmp/*
+.rbenv-version
