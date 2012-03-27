@@ -17,5 +17,9 @@ module Cline
     def append_collector(collector)
       Cline.collectors << collector
     end
+
+    def message_filter(&block)
+      Cline::Collectors::Base.message_filter = block
+    end
   end
 end

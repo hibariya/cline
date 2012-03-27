@@ -3,8 +3,16 @@
 module Cline::Collectors
   class Base
     class << self
+      attr_accessor :message_filter
+
       def create_or_pass(message, notified_at)
         message     = message.encode(Encoding::UTF_8)
+
+        if message_filter
+          message = message_filter.(message)
+          return if message.nil?
+        end
+
         notified_at = parse_time_string_if_needed(notified_at)
 
         return if oldest_notification && oldest_notification.notified_at.to_time > notified_at
