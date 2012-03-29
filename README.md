@@ -1,4 +1,4 @@
-# Cline - CLI Line Notifier
+# Cline - CLI Line Notifier [![Build Status](https://secure.travis-ci.org/hibariya/retter.png?branch=master)](http://travis-ci.org/hibariya/retter)
 
 Cline is a simple notification tool.
 
