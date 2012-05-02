@@ -1,6 +1,6 @@
 # coding: utf-8
 
-require_relative '../spec_helper'
+require 'spec_helper'
 
 describe Cline::Notification do
   describe '.ealiest' do

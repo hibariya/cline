@@ -1,6 +1,6 @@
 # coding: utf-8
 
-require_relative '../spec_helper'
+require 'spec_helper'
 
 describe Cline::Collectors::Base do
   describe '.oldest_notification' do
