@@ -1,17 +1,20 @@
 # coding: utf-8
 
+require 'forwardable'
+
 module Cline
-  def self.configure(&config)
-    config.call Configure.new
+  def self.configure(&block)
+    configure = Configure.new
+    block ? block.(configure) : configure
   end
 
   class Configure
-    def pool_size=(size)
-      Cline.pool_size = size
-    end
+    extend Forwardable
 
-    def out_stream=(stream)
-      Cline.out_stream = stream
+    def_delegators Cline, :pool_size=, :out_stream=
+
+    def notification
+      Cline::Notification
     end
 
     def append_collector(collector)

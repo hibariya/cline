@@ -1,6 +1,6 @@
 # coding: utf-8
 
-require_relative '../spec_helper'
+require 'spec_helper'
 
 describe Cline::Notification do
   describe '.ealiest' do
@@ -88,10 +88,24 @@ describe Cline::Notification do
   end
 
   describe '#display' do
-    let!(:notification) { Fabricate(:notification, display_count: 0) }
+    let!(:notification) { Fabricate(:notification, message: 'hi', notified_at: '2011-01-01 00:00:00', display_count: 0) }
 
-    specify 'display_count should incremented' do
-      -> { notification.display }.should change(notification, :display_count).by(1)
+    describe 'stdout' do
+      before do
+        notification.display
+
+        Cline.out_stream.rewind
+      end
+
+      subject { Cline.out_stream.read.strip }
+
+      it { should == '[2011/01/01 00:00][0] hi' }
+    end
+
+    describe 'display_count' do
+      specify 'display_count should incremented' do
+        -> { notification.display }.should change(notification, :display_count).by(1)
+      end
     end
   end
 end

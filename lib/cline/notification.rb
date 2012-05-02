@@ -14,7 +14,7 @@ module Cline
       order(:display_count).order(:notified_at).limit(limit).offset(offset)
     }
 
-    scope :displayed, where('display_count > 0')
+    scope :displayed, -> { where('display_count > 0') }
 
     scope :recent_notified, ->(limit = 1) {
       n = earliest.first
@@ -36,7 +36,7 @@ module Cline
       end
 
       def clean(pool_size)
-          order('notified_at DESC').
+        order('notified_at DESC').
           order(:display_count).
           offset(pool_size).
           destroy_all
@@ -50,7 +50,9 @@ module Cline
     end
 
     def display_message
-      "[#{notified_at}][#{display_count}] #{message}"
+      display_time = notified_at.strftime('%Y/%m/%d %H:%M')
+
+      "[#{display_time}][#{display_count}] #{message}"
     end
   end
 end

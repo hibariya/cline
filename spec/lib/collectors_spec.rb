@@ -1,38 +1,58 @@
 # coding: utf-8
 
-require_relative '../spec_helper'
+require 'spec_helper'
 
 describe Cline::Collectors::Base do
-  describe '.oldest_notification' do
-    let(:oldest_notified_at) { 100.days.ago }
+  describe '.create_or_pass' do
+    describe '.oldest_notification' do
+      let(:oldest_notified_at) { 100.days.ago }
 
-    before do
-      Cline::Collectors::Base.send :reset_oldest_notification
-      Cline::Notification.create(message: 'awesome', notified_at: oldest_notified_at)
-    end
-
-    context 'too old notification' do
       before do
-        flunk unless Cline::Notification.count == 1
-
-        Cline::Collectors::Base.create_or_pass('too old', oldest_notified_at - 1.day)
+        Cline::Collectors::Base.send :reset_oldest_notification
+        Cline::Notification.create(message: 'awesome', notified_at: oldest_notified_at)
       end
 
-      subject { Cline::Notification.count }
+      context 'too old notification' do
+        before do
+          flunk unless Cline::Notification.count == 1
 
-      it { should == 1 }
-    end
+          Cline::Collectors::Base.create_or_pass('too old', oldest_notified_at - 1.day)
+        end
 
-    context 'newly notification' do
-      before do
-        flunk unless Cline::Notification.count == 1
+        subject { Cline::Notification.count }
 
-        Cline::Collectors::Base.create_or_pass('newly', oldest_notified_at + 1.day)
+        it { should == 1 }
       end
 
-      subject { Cline::Notification.count }
+      context 'newly notification' do
+        before do
+          flunk unless Cline::Notification.count == 1
 
-      it { should == 2 }
+          Cline::Collectors::Base.create_or_pass('newly', oldest_notified_at + 1.day)
+        end
+
+        subject { Cline::Notification.count }
+
+        it { should == 2 }
+      end
+    end
+
+    context 'invalid(filtered) notification' do
+      before do
+        Cline.configure do |config|
+          config.notification.validates :message, length: {maximum: 1000}
+        end
+      end
+
+      subject { capture(:stdout) { Cline::Collectors::Base.create_or_pass('a'*1001, Time.now) } }
+
+      it { should match 'ActiveRecord::RecordInvalid' }
+
+      describe 'Cline::Notification.count' do
+        subject { Cline::Notification.count }
+
+        it { should == 0 }
+      end
     end
   end
 end

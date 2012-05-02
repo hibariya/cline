@@ -10,9 +10,9 @@ module Cline::Collectors
         return if oldest_notification && oldest_notification.notified_at.to_time > notified_at
 
         Cline::Notification.instance_exec message, notified_at do |message, notified_at|
-          create(message: message, notified_at: notified_at) unless find_by_message_and_notified_at(message, notified_at)
+          create!(message: message, notified_at: notified_at) unless find_by_message_and_notified_at(message, notified_at)
         end
-      rescue ActiveRecord::StatementInvalid => e
+      rescue ActiveRecord::StatementInvalid, ActiveRecord::RecordInvalid => e
         puts e.class, e.message
       end
 
