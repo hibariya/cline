@@ -62,9 +62,9 @@ require 'thor'
 require 'sqlite3'
 require 'active_record'
 
-require "cline/version"
-require "cline/configure"
-require "cline/notification"
-require "cline/command"
-require "cline/collectors"
-require "cline/out_streams"
+require 'cline/version'
+require 'cline/configure'
+require 'cline/notification'
+require 'cline/command'
+require 'cline/collectors'
+require 'cline/out_streams'

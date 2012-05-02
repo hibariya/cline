@@ -34,4 +34,6 @@ RSpec.configure do |config|
 
     Cline.boot
   end
+
+  config.include ExampleGroupHelper
 end
