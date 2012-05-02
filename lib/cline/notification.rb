@@ -6,6 +6,10 @@ module Cline
     validate :message, presence: true, uniqueness: true
     validate :display_count, presence: true, numerically: true
 
+    scope :with_volatile_id, -> {
+      select('(id - (SELECT MIN(id) FROM notifications)) AS volatile_id, *')
+    }
+
     scope :by_keyword, ->(word) {
       where('message like ?', "%#{word}%").order('notified_at DESC, display_count')
     }
@@ -27,8 +31,11 @@ module Cline
     end
 
     class << self
-      def display(offset)
-        earliest(1, offset).first.display
+      def display(offset = 0)
+        with_volatile_id.
+          earliest(1, offset).
+          first.
+          display
       end
 
       def normalize_message(m)
@@ -51,8 +58,9 @@ module Cline
 
     def display_message
       display_time = notified_at.strftime('%Y/%m/%d %H:%M')
+      alias_id     = volatile_id.to_i.to_s(36)
 
-      "[#{display_time}][#{display_count}] #{message}"
+      "[#{display_time}][#{display_count}][$#{alias_id}] #{message}"
     end
   end
 end
