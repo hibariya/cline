@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'sqlite3', ['>= 1.3.4']
   s.add_runtime_dependency 'feedzirra', ['~> 0.0.31'] # FIXME builder dependency workaround...
   s.add_runtime_dependency 'notify', ['>= 0.3.0']
+  s.add_runtime_dependency 'launchy', ['>= 2.1.0']
 
   s.add_development_dependency 'rake', ['>= 0.9.2']
   s.add_development_dependency 'ir_b', ['>= 1.4.0']

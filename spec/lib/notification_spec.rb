@@ -87,25 +87,25 @@ describe Cline::Notification do
     its(:message) { should_not match /\n/ }
   end
 
-  describe '#display' do
+  describe '.display' do
     let!(:notification) { Fabricate(:notification, message: 'hi', notified_at: '2011-01-01 00:00:00', display_count: 0) }
 
+    before do
+      Cline::Notification.display
+
+      Cline.out_stream.rewind
+    end
+
     describe 'stdout' do
-      before do
-        notification.display
-
-        Cline.out_stream.rewind
-      end
-
       subject { Cline.out_stream.read.strip }
 
-      it { should == '[2011/01/01 00:00][0] hi' }
+      it { should == '[2011/01/01 00:00][0][$0] hi' }
     end
 
     describe 'display_count' do
-      specify 'display_count should incremented' do
-        -> { notification.display }.should change(notification, :display_count).by(1)
-      end
+      subject { notification.reload }
+
+      its(:display_count) { should == 1 }
     end
   end
 end
