@@ -99,7 +99,7 @@ describe Cline::Notification do
     describe 'stdout' do
       subject { Cline.out_stream.read.strip }
 
-      it { should == '[2011/01/01 00:00][0][$0] hi' }
+      it { should == '[2011/01/01 00:00][0][0] hi' }
     end
 
     describe 'display_count' do
