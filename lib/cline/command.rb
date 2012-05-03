@@ -42,8 +42,7 @@ module Cline
 
     desc :open, 'Open the URL in the message if exists'
     method_options hint: :string
-    def open(hint = options[:hint])
-      alias_string = hint.sub(/\$/, '')
+    def open(alias_string = options[:hint])
       notification = Notification.by_alias_string(alias_string).last
 
       if notification && url = notification.detect_url

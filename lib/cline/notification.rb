@@ -69,7 +69,7 @@ module Cline
     def display_message
       display_time = notified_at.strftime('%Y/%m/%d %H:%M')
 
-      "[#{display_time}][#{display_count}][$#{id_alias_string}] #{message}"
+      "[#{display_time}][#{display_count}][#{id_alias_string}] #{message}"
     end
 
     def detect_url(protocols = %w(http https))
