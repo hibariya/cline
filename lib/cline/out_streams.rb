@@ -21,6 +21,7 @@ module Cline::OutStreams
 
     def puts(str)
       puts_stream str
+
       Notify.notify '', str
     end
 

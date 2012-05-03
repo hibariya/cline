@@ -57,7 +57,11 @@ module Cline
     end
 
     def display
-      Cline.out_stream.puts display_message
+      Cline.out_stream.tap do |out|
+        out.puts display_message
+
+        out.flush if out.respond_to?(:flush)
+      end
 
       increment! :display_count
     end
