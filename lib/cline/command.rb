@@ -1,5 +1,7 @@
 # coding: utf-8
 
+require 'launchy'
+
 module Cline
   class Command < Thor
     def self.start(*)
@@ -35,6 +37,19 @@ module Cline
     def search(keyword = optoins[:query])
       Notification.by_keyword(keyword).each do |notification|
         say notification.display_message
+      end
+    end
+
+    desc 'open', 'Open the URL in the message if exists'
+    method_options hint: :string
+    def open(hint = options[:hint])
+      alias_string = hint.sub(/\$/, '')
+      notification = Notification.by_alias_string(alias_string).last
+
+      if notification && url = notification.detect_url
+        Launchy.open url
+      else
+        say 'No URL found', :red
       end
     end
 

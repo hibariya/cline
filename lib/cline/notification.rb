@@ -1,5 +1,7 @@
 # coding: utf-8
 
+require 'uri'
+
 module Cline
   class Notification < ActiveRecord::Base
     validate :notified_at, presence: true
@@ -64,6 +66,16 @@ module Cline
       display_time = notified_at.strftime('%Y/%m/%d %H:%M')
 
       "[#{display_time}][#{display_count}][$#{id_alias_string}] #{message}"
+    end
+
+    def detect_url(protocols = %w(http https))
+      regexp = URI.regexp(protocols)
+
+      if match = message.match(regexp)
+        match.to_s
+      else
+        nil
+      end
     end
 
     def id_alias_string
