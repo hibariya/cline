@@ -17,13 +17,13 @@ module Cline
         '-i'  => :init,
         '-v'  => :version
 
-    desc 'show', 'Show a latest message'
+    desc :show, 'Show a latest message'
     method_options offset: :integer
     def show(offset = options[:offset] || 0)
       Notification.display offset
     end
 
-    desc 'tick', 'Rotate message'
+    desc :tick, 'Rotate message'
     method_options offset: :integer, interval: :integer
     def tick(offset = options[:offset] || 0, interval = options[:interval] || 60)
       loop do
@@ -32,7 +32,7 @@ module Cline
       end
     end
 
-    desc 'search', 'Search by query'
+    desc :search, 'Search by query'
     method_options query: :string
     def search(keyword = optoins[:query])
       Notification.by_keyword(keyword).each do |notification|
@@ -40,7 +40,7 @@ module Cline
       end
     end
 
-    desc 'open', 'Open the URL in the message if exists'
+    desc :open, 'Open the URL in the message if exists'
     method_options hint: :string
     def open(hint = options[:hint])
       alias_string = hint.sub(/\$/, '')
@@ -53,20 +53,20 @@ module Cline
       end
     end
 
-    desc 'status', 'Show status'
+    desc :status, 'Show status'
     def status
       say "displayed : #{Notification.displayed.count}", :green
       say "total     : #{Notification.count}", :cyan
     end
 
-    desc 'collect', 'Collect sources'
+    desc :collect, 'Collect sources'
     def collect
       Cline.collectors.each &:collect
 
       clean_obsoletes
     end
 
-    desc 'init', 'Init database'
+    desc :init, 'Init database'
     def init
       ActiveRecord::Base.connection.create_table(:notifications) do |t|
         t.text     :message, null: false, default: ''
@@ -75,7 +75,7 @@ module Cline
       end
     end
 
-    desc 'recent', 'Show recent notification'
+    desc :recent, 'Show recent notification'
     method_options limit: :integer
     def recent(limit = options[:limit] || 1)
       Notification.recent_notified.limit(limit).each do |notification|
@@ -83,7 +83,7 @@ module Cline
       end
     end
 
-    desc 'version', 'Show version.'
+    desc :version, 'Show version.'
     def version
       say "cline version #{Cline::VERSION}"
     end
