@@ -49,14 +49,14 @@ Show notifications:
 
 ```
   $ cline tick 0 5 # Or: cline tick --offset 0 --interval 5
-  [2012/05/02 02:34][9][$w6] Introducing DuckDuckHack - Gabriel Weinberg's Blog http://www.gabrielweinberg.com/blog/2012/05/introducing-duckduckhack.html
+  [2012/05/02 02:34][9][w6] Introducing DuckDuckHack - Gabriel Weinberg's Blog http://www.gabrielweinberg.com/blog/2012/05/introducing-duckduckhack.html
   ...
 ```
 
 Open URL in the message:
 
 ```
-  $ cline open $w6
+  $ cline open w6
 ```
 
 ## Use case
