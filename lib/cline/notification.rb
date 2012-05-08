@@ -8,7 +8,7 @@ module Cline
     validate :message, presence: true, uniqueness: true
     validate :display_count, presence: true, numerically: true
 
-    scope :with_id_alias, -> {
+    default_scope -> {
       select('(id - (SELECT MIN(id) FROM notifications)) AS id_alias, *')
     }
 
@@ -38,10 +38,7 @@ module Cline
 
     class << self
       def display(offset = 0)
-        with_id_alias.
-          earliest(1, offset).
-          first.
-          display
+        earliest(1, offset).first.display
       end
 
       def normalize_message(m)
