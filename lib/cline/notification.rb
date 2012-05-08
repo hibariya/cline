@@ -13,7 +13,7 @@ module Cline
     }
 
     scope :by_alias_string, ->(alias_string) {
-      with_id_alias.where('id_alias = ?', alias_string.to_i(36))
+      where('id_alias = ?', alias_string.to_i(36))
     }
 
     scope :by_keyword, ->(word) {
