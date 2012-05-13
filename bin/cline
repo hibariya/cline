@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 
+trap :INT do
+  print "\r"
+  exit
+end
+
 require_relative '../lib/cline'
 
 begin
