@@ -7,7 +7,7 @@ require 'fabrication'
 SimpleCov.start
 
 CLINE_ROOT = Pathname.new(File.dirname(__FILE__) + '/../').realpath
-require_relative '../lib/cline'
+require 'cline'
 
 Dir[File.dirname(__FILE__) + '/support/*'].each {|f| require f }
 require_relative 'fabricators'
@@ -30,7 +30,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     Cline::Notification.delete_all
-    Cline.out_stream = StringIO.new
+    Cline.notify_io = StringIO.new
 
     Cline.boot
   end

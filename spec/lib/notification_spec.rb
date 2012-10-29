@@ -35,7 +35,7 @@ describe Cline::Notification do
     let!(:notification2) { Fabricate(:notification, notified_at: 3.days.ago.beginning_of_day, display_count: 2) }
     let!(:notification3) { Fabricate(:notification, notified_at: 2.days.ago.beginning_of_day, display_count: 2) }
 
-    context 'pool_size 2' do
+    context 'limit 2' do
       before do
         Cline::Notification.clean 2
       end
@@ -47,7 +47,7 @@ describe Cline::Notification do
       it { should include notification3 }
     end
 
-    context 'pool_size 1' do
+    context 'limit 1' do
       before do
         Cline::Notification.clean 1
       end
@@ -93,11 +93,11 @@ describe Cline::Notification do
     before do
       Cline::Notification.display
 
-      Cline.out_stream.rewind
+      Cline.notify_io.rewind
     end
 
     describe 'stdout' do
-      subject { Cline.out_stream.read.strip }
+      subject { Cline.notify_io.read.strip }
 
       it { should == '[2011/01/01 00:00][0][0] hi' }
     end

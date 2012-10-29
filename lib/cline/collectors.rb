@@ -13,7 +13,10 @@ module Cline::Collectors
           create!(message: message, notified_at: notified_at) unless find_by_message_and_notified_at(message, notified_at)
         end
       rescue ActiveRecord::StatementInvalid, ActiveRecord::RecordInvalid => e
-        puts e.class, e.message
+        error = [e.class, e.message].join(' ')
+
+        puts error
+        Cline.logger.error error
       end
 
       private
@@ -27,8 +30,7 @@ module Cline::Collectors
       end
 
       def oldest_notification
-        @oldest_notification ||=
-          Cline::Notification.order(:notified_at).limit(1).first
+        @oldest_notification ||= Cline::Notification.order(:notified_at).limit(1).first
       end
 
       def reset_oldest_notification

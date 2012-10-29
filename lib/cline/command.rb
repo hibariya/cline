@@ -1,12 +1,32 @@
 # coding: utf-8
 
-require 'launchy'
+require 'thor'
 
 module Cline
+  autoload :Launchy, 'launchy'
+
   class Command < Thor
-    def self.start(*)
-      Cline.boot
-      super
+    class << self
+      def start(args = ARGV, *)
+        exec_as_client_if_server_running args
+
+        super
+      rescue => e
+        Cline.logger.fatal :cline do
+          %(#{e.class} #{e.message}\n#{e.backtrace.join($/)})
+        end
+
+        raise
+      end
+
+      private
+
+      def exec_as_client_if_server_running(args)
+        return unless Cline::Server.running?
+        return unless Cline::Server.client_process?
+
+        Cline::Client.exec args
+      end
     end
 
     map '-s'  => :show,
@@ -15,6 +35,7 @@ module Cline
         '-st' => :status,
         '-c'  => :collect,
         '-i'  => :init,
+        '-d'  => :server,
         '-v'  => :version
 
     desc :show, 'Show a latest message'
@@ -60,13 +81,19 @@ module Cline
 
     desc :collect, 'Collect sources'
     def collect
-      Cline.collectors.each &:collect
+      pid = Process.fork {
+        Cline.collectors.each &:collect
 
-      clean_obsoletes
+        Notification.clean(Cline.notifications_limit) if Cline.notifications_limit
+      }
+
+      Process.waitpid pid
     end
 
     desc :init, 'Init database'
     def init
+      Cline.establish_database_connection
+
       ActiveRecord::Base.connection.create_table(:notifications) do |t|
         t.text     :message, null: false, default: ''
         t.integer  :display_count, null: false, default: 0
@@ -82,15 +109,28 @@ module Cline
       end
     end
 
-    desc :version, 'Show version.'
+    desc :version, 'Show version'
     def version
       say "cline version #{Cline::VERSION}"
     end
 
-    private
-
-    def clean_obsoletes
-      Notification.clean(Cline.pool_size) if Cline.pool_size
+    desc :server, 'start or stop server'
+    def server(command = :start)
+      case command.intern
+      when :start
+        Server.start
+      when :stop
+        Server.stop
+      when :status
+        if Server.running?
+          say "Socket file exists"
+          say "But server isn't responding" if Server.client_process?
+        else
+          say "Server isn't running"
+        end
+      else
+        say 'Usage: cline server (start|stop)'
+      end
     end
   end
 end
