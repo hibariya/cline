@@ -4,10 +4,10 @@ require 'fileutils'
 require 'cline/configure'
 require 'cline/version'
 
-module Cline
-  autoload :Logger,       'logger'
-  autoload :ActiveRecord, 'active_record'
+autoload :Logger,       'logger'
+autoload :ActiveRecord, 'active_record'
 
+module Cline
   autoload :Collectors,   'cline/collectors'
   autoload :Command,      'cline/command'
   autoload :Notification, 'cline/notification'

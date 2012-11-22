@@ -2,9 +2,9 @@
 
 require 'thor'
 
-module Cline
-  autoload :Launchy, 'launchy'
+autoload :Launchy, 'launchy'
 
+module Cline
   class Command < Thor
     class << self
       def start(args = ARGV, *)

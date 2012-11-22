@@ -1,8 +1,8 @@
 # coding: utf-8
 
-module Cline
-  autoload :Notify, 'notify'
+autoload :Notify, 'notify'
 
+module Cline
   module NotifyIO
     class WithNotify
       def initialize(io = $stdout)

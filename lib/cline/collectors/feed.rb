@@ -1,10 +1,10 @@
 # coding: utf-8
 
+autoload :REXML,     'rexml/document'
+autoload :Feedzirra, 'feedzirra'
+
 module Cline::Collectors
   class Feed < Base
-    autoload :REXML,     'rexml/document'
-    autoload :Feedzirra, 'feedzirra'
-
     class << self
       def collect
         new(opml_path.read).entries.each do |entry|
