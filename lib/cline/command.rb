@@ -1,8 +1,7 @@
 # coding: utf-8
 
 require 'thor'
-
-autoload :Launchy, 'launchy'
+require 'launchy'
 
 module Cline
   class Command < Thor
