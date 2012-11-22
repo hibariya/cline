@@ -22,10 +22,15 @@ module Cline
       private
 
       def exec_as_client_if_server_running(args)
+        return if client_command?(args)
         return unless Cline::Server.running?
         return unless Cline::Server.client_process?
 
         Cline::Client.exec args
+      end
+
+      def client_command?(args)
+        %w(collect open).include? args.first
       end
     end
 
@@ -84,13 +89,9 @@ module Cline
 
     desc :collect, 'Collect sources'
     def collect
-      pid = Process.fork {
-        Cline.collectors.each &:collect
+      Cline.collectors.each &:collect
 
-        Notification.clean(Cline.notifications_limit) if Cline.notifications_limit
-      }
-
-      Process.waitpid pid
+      Notification.clean(Cline.notifications_limit) if Cline.notifications_limit
     end
 
     desc :init, 'Init database'
