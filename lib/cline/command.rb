@@ -46,10 +46,11 @@ module Cline
 
     desc :tick, 'Rotate message'
     method_options offset: :integer, interval: :integer
-    def tick(offset = options[:offset] || 0, interval = options[:interval] || 60)
+    def tick(interval = options[:interval] || 5, offset = options[:offset] || 0)
       loop do
         show offset
-        sleep interval.to_i
+
+        sleep Integer(interval)
       end
     end
 
@@ -77,6 +78,8 @@ module Cline
     def status
       say "displayed : #{Notification.displayed.count}", :green
       say "total     : #{Notification.count}", :cyan
+
+      server :status
     end
 
     desc :collect, 'Collect sources'
