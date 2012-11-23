@@ -8,7 +8,7 @@ describe 'Server' do
       Process.fork { Cline::Command.start(%w(server start)) }
       wait_for_server
 
-      Cline::Command.any_instance.should_not_receive(:status)
+      #Cline::Command.any_instance.should_not_receive(:status)
     end
 
     after do

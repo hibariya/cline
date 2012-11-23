@@ -1,7 +1,6 @@
 # coding: utf-8
 
 require 'thor'
-require 'launchy'
 
 module Cline
   class Command < Thor
@@ -69,6 +68,8 @@ module Cline
     desc :open, 'Open the URL in the message if exists'
     method_options hint: :string
     def open(alias_string = options[:hint])
+      require 'launchy'
+
       notification = Notification.by_alias_string(alias_string).last
 
       if notification && url = notification.detect_url

@@ -19,20 +19,18 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ['lib']
 
-  s.add_runtime_dependency 'thor',         ['>= 0.14.6']
-  s.add_runtime_dependency 'activerecord', ['>= 3.1.1']
-  s.add_runtime_dependency 'sqlite3',      ['>= 1.3.4']
-  s.add_runtime_dependency 'feedzirra',    ['~> 0.0.31'] # FIXME builder dependency workaround...
-  s.add_runtime_dependency 'notify',       ['>= 0.3.0']
-  s.add_runtime_dependency 'launchy',      ['>= 2.1.0']
+  s.add_runtime_dependency 'thor',         ['~> 0.16.0']
+  s.add_runtime_dependency 'activerecord', ['~> 3.1.8']
+  s.add_runtime_dependency 'sqlite3',      ['~> 1.3.6']
+  s.add_runtime_dependency 'feedzirra',    ['~> 0.1.3']
+  s.add_runtime_dependency 'notify',       ['~> 0.4.0']
+  s.add_runtime_dependency 'launchy',      ['~> 2.1.2']
 
-  s.add_development_dependency 'rake',          ['>= 0.9.2']
-  s.add_development_dependency 'ir_b',          ['>= 1.4.0']
-  s.add_development_dependency 'tapp',          ['>= 1.1.0']
-  s.add_development_dependency 'rspec',         ['>= 2.6.0']
-  s.add_development_dependency 'rr',            ['>= 1.0.4']
-  s.add_development_dependency 'fabrication',   ['>= 1.2.0']
-  s.add_development_dependency 'fuubar',        ['>= 0.0.6']
-  s.add_development_dependency 'simplecov',     ['>= 0.5.3']
-  s.add_development_dependency 'activesupport', ['>= 3.1.1']
+  s.add_development_dependency 'rake',          ['~> 10.0.2']
+  s.add_development_dependency 'tapp',          ['~> 1.4.0']
+  s.add_development_dependency 'rspec',         ['~> 2.12.0']
+  s.add_development_dependency 'fabrication',   ['~> 2.5.0']
+  s.add_development_dependency 'fuubar',        ['~> 1.1.0']
+  s.add_development_dependency 'simplecov',     ['~> 0.7.1']
+  s.add_development_dependency 'activesupport', ['~> 3.1.8']
 end

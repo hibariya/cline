@@ -1,7 +1,6 @@
 # coding: utf-8
 
-autoload :REXML,     'rexml/document'
-autoload :Feedzirra, 'feedzirra'
+require 'pathname'
 
 module Cline::Collectors
   class Feed < Base
@@ -20,6 +19,10 @@ module Cline::Collectors
     end
 
     def initialize(opml_str)
+      require 'rexml/document'
+      require 'active_support/deprecation'
+      require 'feedzirra'
+
       @opml = REXML::Document.new(opml_str)
     end
 

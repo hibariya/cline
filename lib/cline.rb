@@ -1,11 +1,9 @@
 # coding: utf-8
 
 require 'fileutils'
+require 'logger'
 require 'cline/configure'
 require 'cline/version'
-
-autoload :Logger,       'logger'
-autoload :ActiveRecord, 'active_record'
 
 module Cline
   autoload :Collectors,   'cline/collectors'
@@ -43,6 +41,8 @@ module Cline
     end
 
     def establish_database_connection
+      require 'active_record'
+
       ActiveRecord::Base.logger = logger
       ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: %(#{cline_dir}/cline.sqlite3), timeout: 10000
     end
