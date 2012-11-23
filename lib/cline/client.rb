@@ -5,10 +5,8 @@ require 'json'
 
 module Cline
   class Client
-    def self.exec(args)
+    def self.start(args)
       new(args).invoke
-
-      exit
     end
 
     def initialize(args)

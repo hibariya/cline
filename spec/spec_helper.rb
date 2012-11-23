@@ -15,7 +15,7 @@ require_relative 'fabricators'
 RSpec.configure do |config|
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
-  config.mock_with :rr
+  config.mock_with :rspec
 
   config.before(:suite) do
     home = CLINE_ROOT.join('spec', 'tmp')

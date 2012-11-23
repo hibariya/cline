@@ -7,9 +7,9 @@ module Cline
   class Command < Thor
     class << self
       def start(args = ARGV, *)
-        exec_as_client_if_server_running args
+        return super unless server_available?(args)
 
-        super
+        Cline::Client.start args
       rescue => e
         Cline.logger.fatal :cline do
           %(#{e.class} #{e.message}\n#{e.backtrace.join($/)})
@@ -20,12 +20,12 @@ module Cline
 
       private
 
-      def exec_as_client_if_server_running(args)
-        return if client_command?(args)
-        return unless Cline::Server.running?
-        return unless Cline::Server.client_process?
+      def server_available?(args)
+        return false if client_command?(args)
+        return false unless Cline::Server.running?
+        return false unless Cline::Server.client_process?
 
-        Cline::Client.exec args
+        true
       end
 
       def client_command?(args)
