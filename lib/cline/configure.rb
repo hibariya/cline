@@ -12,7 +12,7 @@ module Cline
     extend Forwardable
 
     def_delegators Cline,
-      :logger, :logger=, :notify_io, :notify_io=, :notifications_limit, :notifications_limit=, :collectors, :collectors=,
+      :logger, :logger=, :notify_io, :notify_io=, :notifications_limit, :notifications_limit=, :collectors, :collectors=, :jobs, :jobs=,
       :pool_size=, :out_stream= # obsoletes
 
     def notification

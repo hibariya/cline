@@ -88,9 +88,13 @@ module Cline
 
     desc :collect, 'Collect sources'
     def collect
-      Cline.collectors.each &:collect
+      pid = Process.fork {
+        Cline.collectors.each &:collect
 
-      Notification.clean(Cline.notifications_limit) if Cline.notifications_limit
+        Notification.clean(Cline.notifications_limit) if Cline.notifications_limit
+      }
+
+      Process.waitpid pid
     end
 
     desc :init, 'Init database'

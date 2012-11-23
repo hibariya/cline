@@ -60,11 +60,13 @@ module Cline
     end
 
     def run
+      invoke_jobs
+
       loop do
         Thread.fork @server.accept do |socket|
           request = socket.recv(120)
 
-          invoke socket, JSON.parse(request)
+          process socket, JSON.parse(request)
 
           socket.close
 
@@ -77,7 +79,7 @@ module Cline
 
     private
 
-    def invoke(io, args)
+    def process(io, args)
       replace_current_io io
 
       Command.start args
@@ -87,6 +89,12 @@ module Cline
 
     def replace_current_io(io)
       Thread.current[:stdout] = Thread.current[:stderr] = io
+    end
+
+    def invoke_jobs
+      Cline.jobs.each do |job|
+        Thread.fork(job, &:run)
+      end
     end
   end
 end

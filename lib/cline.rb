@@ -14,11 +14,13 @@ module Cline
   autoload :Server,       'cline/server'
   autoload :Client,       'cline/client'
   autoload :NotifyIO,     'cline/notify_io'
-  autoload :OutStreams,   'cline/notify_io'
+  autoload :ScheduledJob, 'cline/scheduled_job'
+
+  autoload :OutStreams,   'cline/notify_io' # obsolete
 
   class << self
     attr_accessor :logger, :notifications_limit
-    attr_writer   :collectors, :notify_io
+    attr_writer   :collectors, :notify_io, :jobs
 
     def cline_dir
       "#{ENV['HOME']}/.cline"
@@ -34,6 +36,10 @@ module Cline
 
     def collectors
       @collectors ||= []
+    end
+
+    def jobs
+      @jobs ||= []
     end
 
     def establish_database_connection
