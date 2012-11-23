@@ -2,6 +2,7 @@
 
 require 'pathname'
 require 'socket'
+require 'json'
 require 'cline/monkey'
 
 module Cline
@@ -61,9 +62,9 @@ module Cline
     def run
       loop do
         Thread.fork @server.accept do |socket|
-          request = socket.recv(120).split
+          request = socket.recv(120)
 
-          invoke socket, request
+          invoke socket, JSON.parse(request)
 
           socket.close
 

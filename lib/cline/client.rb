@@ -1,16 +1,17 @@
 # coding: utf-8
 
 require 'socket'
+require 'json'
 
 module Cline
   class Client
-    def self.exec(*args)
-      new(*args).invoke
+    def self.exec(args)
+      new(args).invoke
 
       exit
     end
 
-    def initialize(*args)
+    def initialize(args)
       @args = args
     end
 
@@ -18,7 +19,7 @@ module Cline
       $stdout.sync = true
 
       UNIXSocket.open Server.socket_file.to_path do |socket|
-        socket.puts @args.join(' ')
+        socket.puts @args.to_json
 
         while line = socket.gets
           puts line
