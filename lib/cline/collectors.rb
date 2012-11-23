@@ -4,6 +4,8 @@ module Cline::Collectors
   class Base
     class << self
       def create_or_pass(message, notified_at)
+        return unless notified_at
+
         message     = message.encode(Encoding::UTF_8)
         notified_at = parse_time_string_if_needed(notified_at)
 
