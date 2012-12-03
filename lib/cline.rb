@@ -44,7 +44,7 @@ module Cline
       require 'active_record'
 
       ActiveRecord::Base.logger = logger
-      ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: %(#{cline_dir}/cline.sqlite3), timeout: 10000
+      ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: %(#{cline_dir}/cline.sqlite3), timeout: 10000, pool: 10
     end
 
     def stdout
@@ -59,10 +59,10 @@ module Cline
       @notify_io == $stdout ? stdout : @notify_io
     end
 
-    private
+    def load_config_if_exists
+      config_file = "#{cline_dir}/config"
 
-    def mkdir_if_needed
-      FileUtils.mkdir_p cline_dir
+      load config_file if File.exist?(config_file)
     end
 
     def load_default_config
@@ -71,10 +71,10 @@ module Cline
       @notifications_limit ||= nil
     end
 
-    def load_config_if_exists
-      config_file = "#{cline_dir}/config"
+    private
 
-      load config_file if File.exist?(config_file)
+    def mkdir_if_needed
+      FileUtils.mkdir_p cline_dir
     end
 
     def default_logger

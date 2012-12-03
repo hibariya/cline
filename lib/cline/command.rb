@@ -129,6 +129,11 @@ module Cline
         Server.start
       when :stop
         Server.stop
+      when :reload
+        Cline.tap do |c|
+          c.load_config_if_exists
+          c.load_default_config
+        end
       when :status
         if Server.running?
           say "Socket file exists"
