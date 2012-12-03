@@ -11,8 +11,18 @@ Gem::Specification.new do |s|
   s.summary     = %q{CLI Line Notifier}
   s.description = %q{Cline - CLI Line Notifier}
 
-  #s.post_install_message = <<-EOM
-  #EOM
+  s.post_install_message = <<-EOM
+    **Important changes**
+
+    `tick` command usage has changed.
+
+    `cline tick OFFSET INTERVAL' -> `cline tick INTERVAL OFFSET'
+
+    **Cline server is available**
+
+    $ cline server start
+    $ cline server stop
+  EOM
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
