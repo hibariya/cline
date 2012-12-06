@@ -12,7 +12,7 @@ module Cline
       def puts(str)
         @io.puts str
 
-        Notify.notify '', str
+        Notify.notify 'cline', str
       end
     end
 

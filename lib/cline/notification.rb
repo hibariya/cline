@@ -41,8 +41,8 @@ module Cline
     end
 
     class << self
-      def display(offset = 0)
-        earliest(1, offset).first.display
+      def display!(offset = 0)
+        earliest(1, offset).first.display!
       end
 
       def normalize_message(m)
@@ -57,14 +57,10 @@ module Cline
       end
     end
 
-    def display
-      Cline.notify_io.tap do |io|
-        io.puts display_message
-
-        io.flush if io.respond_to?(:flush)
-      end
-
-      increment! :display_count
+    def display!
+      display_message.tap {
+        increment! :display_count
+      }
     end
 
     def display_message

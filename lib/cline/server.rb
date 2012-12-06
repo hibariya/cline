@@ -88,6 +88,8 @@ module Cline
     end
 
     def replace_current_io(io)
+      io.sync = true
+
       Thread.current[:stdout] = Thread.current[:stderr] = io
     end
 

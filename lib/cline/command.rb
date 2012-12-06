@@ -44,7 +44,7 @@ module Cline
     desc :show, 'Show a latest message'
     method_options offset: :integer
     def show(offset = options[:offset] || 0)
-      Notification.display offset
+      notify Notification.display!(offset)
     end
 
     desc :tick, 'Rotate message'
@@ -61,7 +61,7 @@ module Cline
     method_options query: :string
     def search(keyword = optoins[:query])
       Notification.by_keyword(keyword).each do |notification|
-        say notification.display_message
+        puts notification.display_message
       end
     end
 
@@ -81,8 +81,8 @@ module Cline
 
     desc :status, 'Show status'
     def status
-      say "displayed : #{Notification.displayed.count}", :green
-      say "total     : #{Notification.count}", :cyan
+      puts "displayed : #{Notification.displayed.count}"
+      puts "total     : #{Notification.count}"
 
       server :status
     end
@@ -113,37 +113,60 @@ module Cline
     method_options limit: :integer
     def recent(limit = options[:limit] || 1)
       Notification.recent_notified.limit(limit).each do |notification|
-        say notification.display_message
+        puts notification.display_message
       end
     end
 
     desc :version, 'Show version'
     def version
-      say "cline version #{Cline::VERSION}"
+      puts "cline version #{Cline::VERSION}"
     end
 
     desc :server, 'start or stop server'
     def server(command = :start)
       case command.intern
       when :start
+        puts 'starting cline server'
+
         Server.start
       when :stop
+        puts 'stopping cline server'
+
         Server.stop
       when :reload
+        puts 'reloading configuration'
+
         Cline.tap do |c|
           c.load_config_if_exists
           c.load_default_config
         end
       when :status
         if Server.running?
-          say "Socket file exists"
-          say "But server isn't responding" if Server.client_process?
+          puts "Socket file exists"
+          puts "But server isn't responding" if Server.client_process?
         else
-          say "Server isn't running"
+          puts "Server isn't running"
         end
       else
-        say 'Usage: cline server (start|stop)'
+        puts 'Usage: cline server (start|stop)'
       end
+    end
+
+    private
+
+    def notify(str)
+      Cline.notify_io.tap do |io|
+        io.puts str
+        io.flush if io.respond_to?(:flush)
+      end
+
+      Thread.current[:stdout].tap do |stdout|
+        stdout.puts str if stdout
+      end
+    end
+
+    def puts(str)
+      Cline.stdout.puts str
     end
   end
 end
