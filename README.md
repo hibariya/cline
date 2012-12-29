@@ -1,14 +1,15 @@
-# Cline - CLI lazy notifier [![Build Status](https://secure.travis-ci.org/hibariya/cline.png?branch=master)](http://travis-ci.org/hibariya/cline)
+# Cline - Show recently news on the terminal[![Build Status](https://secure.travis-ci.org/hibariya/cline.png?branch=master)](http://travis-ci.org/hibariya/cline)
 
 ```
  +-------------------------+        +-------+              +--------------------------------------+
  | Notification Collectors |     -> | Cline |           -> | IO (STDOUT, File and Other notifier) |
  +-------------------------+        +-------+              +--------------------------------------+
- Collect any notifications       Store notifications    Put anywhere
+ Collect any news                   Store notifications    Put anywhere
 ```
 
-Cline is a simple and lazy notification tool for CLI.
-This tool collects automatically any Feeds and GitHub activities and those notifications shown on stdout or anywhere at some time.
+Cline is a simple notification tool for CLI.
+This tool collects automatically any Feeds and GitHub activities.
+Those notifications shown on stdout or anywhere at good timing.
 
 Like this:
 
@@ -19,10 +20,10 @@ $ cline show
 
 A notification is structured by below contents:
 
-* published date of the entry and activity
-* displayed count
-* alias number for specify from CLI ([0-9a-z]+)
-* title or summary (includes source URL)
+* Published date of the entry and activity
+* Displayed count
+* Alias number for specify from CLI ([0-9a-z]+)
+* Title or summary (includes source URL)
 
 In most cases Cline used for backtick of screen. Like this:
 
@@ -32,19 +33,27 @@ In most cases Cline used for backtick of screen. Like this:
 [2012/12/01 23:12][9][1bs] How to Clean Up Your Online Presence and Make a Great First Impression http://lifehacker.com/5963864/how-to-clean-up-your-online-presence-and-make-a-great-first-impression
 ```
 
-Cline decides priority of each notification with 'displayed count' and 'published date'.
-You can't control priority of Cline's output (remember that cline is lazy ;).
+You can open the URI of a notification. Like this:
+
+```
+  $ cline open 1bt
+```
+
+Cline decides priority of each notification automatically with 'displayed count' and 'published date'.
+You can't control priority of Cline's output.
 
 ## Installation and Setting
 
 ```
   $ gem install cline
-  $ cline init        # database and config file will created under ~/.cline directory
+  $ cline init        # database file will created under ~/.cline directory
 ```
 
-Customize configuration file in ~/.cline/config:
+An example of configuration file (~/.cline/config):
 
 ```ruby
+  ENV['NOTIFY'] = 'notify-send' # ensure notification behaviour if you use the notify gem
+
   Cline.configure do |config|
     config.notifications_limit = 2000 # old notifications will be removed automatically
 

@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+
 $:.push File.expand_path('../lib', __FILE__)
 require 'cline/version'
 
@@ -8,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ['hibariya']
   s.email       = ['celluloid.key@gmail.com']
   s.homepage    = 'https://github.com/hibariya/cline'
-  s.summary     = %q{CLI Line Notifier}
-  s.description = %q{Cline - CLI Line Notifier}
+  s.summary     = %q{Show recently news on the terminal}
+  s.description = %q{Show recently news on the terminal.}
 
   s.post_install_message = <<-EOM
     **Important changes**
@@ -20,8 +21,11 @@ Gem::Specification.new do |s|
 
     **Cline server is available**
 
-    $ cline server start
-    $ cline server stop
+    Cline uses daemon process if it's running.
+
+    $ cline server start  # start server
+    $ cline server stop   # stop server
+    $ cline server reload # reload config file
   EOM
 
   s.files         = `git ls-files`.split("\n")
