@@ -1,8 +1,12 @@
 # coding: utf-8
 
 require 'uri'
+require 'sqlite3'
+require 'active_record'
 
 module Cline
+  establish_database_connection
+
   class Notification < ActiveRecord::Base
     validate :notified_at, presence: true
     validate :message, presence: true, uniqueness: true
@@ -37,30 +41,26 @@ module Cline
     end
 
     class << self
-      def display(offset = 0)
-        earliest(1, offset).first.display
+      def display!(offset = 0)
+        earliest(1, offset).first.display!
       end
 
       def normalize_message(m)
         m.gsub(/[\r\n]/, '')
       end
 
-      def clean(pool_size)
+      def clean(limit)
         order('notified_at DESC').
           order(:display_count).
-          offset(pool_size).
+          offset(limit).
           destroy_all
       end
     end
 
-    def display
-      Cline.out_stream.tap do |out|
-        out.puts display_message
-
-        out.flush if out.respond_to?(:flush)
-      end
-
-      increment! :display_count
+    def display!
+      display_message.tap {
+        increment! :display_count
+      }
     end
 
     def display_message

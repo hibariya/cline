@@ -1,11 +1,14 @@
 # coding: utf-8
 
+require 'pathname'
+
 module Cline::Collectors
   class Feed < Base
     class << self
       def collect
         new(opml_path.read).entries.each do |entry|
           message = Cline::Notification.normalize_message("#{entry.title} #{entry.url}")
+
           create_or_pass message, entry.published
         end
       end
@@ -17,47 +20,50 @@ module Cline::Collectors
 
     def initialize(opml_str)
       require 'rexml/document'
+      require 'active_support/deprecation'
       require 'feedzirra'
 
       @opml = REXML::Document.new(opml_str)
-      @feeds = parse_opml(@opml.elements['opml/body'])
     end
 
     def entries
-      entries = []
+      feed_urls = parse_opml(@opml.elements['opml/body'])
+      entries   = []
 
-      @feeds.map { |feed_url|
-        Thread.fork {
-          begin
-            feed = Feedzirra::Feed.fetch_and_parse(feed_url)
+      3.times.map { Thread.fork {
+        while url = feed_urls.pop
+          entries += fetch_entries(url)
+        end
 
-            if feed.is_a?(Feedzirra::FeedUtilities)
-              feed.entries.each { |entry| entries << entry }
-            end
-          rescue
-            puts $!.class, $!.message
-          ensure
-            Thread.pass
-          end
-        }
-      }.map(&:join)
+        Thread.pass
+      } }.map(&:join)
 
       entries
     end
 
+    private
+
     def parse_opml(opml_node)
-      feeds = []
+      urls = []
 
       opml_node.elements.each('outline') do |el|
         unless el.elements.size.zero?
-          feeds += parse_opml(el) 
+          urls += parse_opml(el)
         else
           url = el.attributes['xmlUrl']
-          feeds << url if url
+          urls << url if url
         end
       end
 
-      feeds
+      urls
+    end
+
+    def fetch_entries(feed_url)
+      feed = Feedzirra::Feed.fetch_and_parse(feed_url)
+
+      feed.is_a?(Feedzirra::FeedUtilities) ? feed.entries : []
+    rescue => e
+      Cline.logger.error [e.class, e.message].join(' ')
     end
   end
 end

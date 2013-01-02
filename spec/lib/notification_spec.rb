@@ -35,7 +35,7 @@ describe Cline::Notification do
     let!(:notification2) { Fabricate(:notification, notified_at: 3.days.ago.beginning_of_day, display_count: 2) }
     let!(:notification3) { Fabricate(:notification, notified_at: 2.days.ago.beginning_of_day, display_count: 2) }
 
-    context 'pool_size 2' do
+    context 'limit 2' do
       before do
         Cline::Notification.clean 2
       end
@@ -47,7 +47,7 @@ describe Cline::Notification do
       it { should include notification3 }
     end
 
-    context 'pool_size 1' do
+    context 'limit 1' do
       before do
         Cline::Notification.clean 1
       end
@@ -64,7 +64,7 @@ describe Cline::Notification do
     let!(:notification2) { Fabricate(:notification, notified_at: 2.days.ago.beginning_of_day, display_count: 0) }
 
     before do
-      Cline::Notification.display 0
+      Cline::Notification.display! 0
     end
 
     subject { Cline::Notification.recent_notified(1).all }
@@ -87,25 +87,17 @@ describe Cline::Notification do
     its(:message) { should_not match /\n/ }
   end
 
-  describe '.display' do
+  describe '.display!' do
     let!(:notification) { Fabricate(:notification, message: 'hi', notified_at: '2011-01-01 00:00:00', display_count: 0) }
 
-    before do
-      Cline::Notification.display
-
-      Cline.out_stream.rewind
-    end
+    subject { Cline::Notification.display! }
 
     describe 'stdout' do
-      subject { Cline.out_stream.read.strip }
-
       it { should == '[2011/01/01 00:00][0][0] hi' }
     end
 
-    describe 'display_count' do
-      subject { notification.reload }
-
-      its(:display_count) { should == 1 }
+    specify 'display_count should incremented' do
+      notification.display_count.should == 0
     end
   end
 end

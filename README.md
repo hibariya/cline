@@ -1,39 +1,78 @@
-# Cline - CLI Line Notifier [![Build Status](https://secure.travis-ci.org/hibariya/cline.png?branch=master)](http://travis-ci.org/hibariya/cline)
-
-Cline is a simple notification tool.
+# Cline - Show recently news on the terminal[![Build Status](https://secure.travis-ci.org/hibariya/cline.png?branch=master)](http://travis-ci.org/hibariya/cline)
 
 ```
- +------------+              +-----------+              +-----------+
- | Collectors |  ----------> | Cline     |  ----------> | OutStream |
- +------------+              +-----------+              +-----------+
- Collect any notifications   Pool notifications         Put anywhere
+ +-------------------------+        +-------+              +--------------------------------------+
+ | Notification Collectors |     -> | Cline |           -> | IO (STDOUT, File and Other notifier) |
+ +-------------------------+        +-------+              +--------------------------------------+
+ Collect any news                   Store notifications    Put anywhere
 ```
+
+Cline is a simple notification tool for CLI.
+This tool collects automatically any Feeds and GitHub activities.
+Those notifications shown on stdout or anywhere at good timing.
+
+Like this:
+
+```
+$ cline show
+[2012/11/27 01:18][5][184] TED: Ideas worth spreading http://icio.us/+a922037eaf9bb
+```
+
+A notification is structured by below contents:
+
+* Published date of the entry and activity
+* Displayed count
+* Alias number for specify from CLI ([0-9a-z]+)
+* Title or summary (includes source URL)
+
+In most cases Cline used for backtick of screen. Like this:
+
+```
+[2012/12/01 23:12][9][1bt] Amazon Redshift http://aws.amazon.com/redshift/
+[2012/12/01 23:12][9][1bu] My eBook build process and some PDF, EPUB and MOBI tips - Pat Shaughnessy http://patshaughnessy.net/2012/11/27/my-ebook-build-process-and-some-pdf-epub-and-mobi-tips
+[2012/12/01 23:12][9][1bs] How to Clean Up Your Online Presence and Make a Great First Impression http://lifehacker.com/5963864/how-to-clean-up-your-online-presence-and-make-a-great-first-impression
+```
+
+You can open the URI of a notification. Like this:
+
+```
+  $ cline open 1bt
+```
+
+Cline decides priority of each notification automatically with 'displayed count' and 'published date'.
+You can't control priority of Cline's output.
 
 ## Installation and Setting
 
 ```
   $ gem install cline
-  $ cline init
+  $ cline init        # database file will created under ~/.cline directory
 ```
 
-In ~/.cline/config:
+An example of configuration file (~/.cline/config):
 
 ```ruby
+  ENV['NOTIFY'] = 'notify-send' # ensure notification behaviour if you use the notify gem
+
   Cline.configure do |config|
-    config.pool_size = 2000
+    config.notifications_limit = 2000 # old notifications will be removed automatically
 
-    config.out_stream = Cline::OutStreams::WithNotify.new($stdout)
-    ## Or
-    # config.out_stream = $stdout
+    config.notify_io = Cline::NotifyIO::WithNotify.new
+    # Default is:
+    # config.notify_io = $stdout
 
-    config.append_collector Cline::Collectors::Feed
-    ## Github:
-    # config.append_collector Cline::Collectors::Github
-    # Cline::Collectors::Github.login_name = 'hibariya'
+    config.collectors << Cline::Collectors::Feed
+
+    # Github:
+    config.collectors << Cline::Collectors::Github
+    Cline::Collectors::Github.login_name = 'hibariya'
+
+    # When server is running then collectors will run every hours.
+    config.jobs << Cline::ScheduledJob.new(-> { Time.now.min.zero? }, &:collect)
   end
 ```
 
-Write your RSS feeds OPML file:
+Write OPML file of your RSS feeds:
 
 ```
   $ curl http://foo.examle.com/url/to/opml.xml > ~/.cline/feeds.xml
@@ -48,14 +87,14 @@ Collect notifications:
 Show notifications:
 
 ```
-  $ cline tick 0 5 # Or: cline tick --offset 0 --interval 5
+  $ cline tick 5
   [2012/05/02 02:34][9][w6] Introducing DuckDuckHack - Gabriel Weinberg's Blog http://www.gabrielweinberg.com/blog/2012/05/introducing-duckduckhack.html
           |          |  |
           `-- time   |  `-- alias
                      `----- display count
 ```
 
-Open URL in the message:
+How to open a URL in the message: Use open command and specify notification alias.
 
 ```
   $ cline open w6
@@ -63,29 +102,29 @@ Open URL in the message:
 
 ## Use case
 
-in ~/.screenrc
+In most cases Cline used for backtick of screen.
+
+In ~/.screenrc:
 
 ```
-  backtick 0 0 0 cline tick 0 60
+  backtick 0 0 0 cline tick 5
 ```
 
-## initialize Database
+## Cline daemon
 
-`init` command initialize new sqlite3 database.
-
-```
-  $ cline init
-```
-
-## Collect
-
-`collect` command collect new notifications from `Cline.collectors`.
+When server is running then cline uses server process.
+Using server is faster and less memory.
 
 ```
-  $ cline collect
+  $ cline server start  # start server
+  $ cline server reload # reload ~/.cline/config file
+  $ cline server stop   # stop server
+  $ cline server status # show server status
 ```
 
-### Custom Collector
+## Customize
+
+### Custom collector
 
 *collector* required `collect` method.
 
@@ -106,29 +145,27 @@ example:
 ```
 
 Cline::Collectors::Base class provides `create_or_pass` method.
-It create a new unique notification.
+It create a new (unique) notification.
 
-### Registration
-
-in ~/.cline/config
+In ~/.cline/config:
 
 ```ruby
   require 'path/to/my_collector'
 
   Cline.configure do |config|
     # ...
-    config.append_collector MyCollector
+    config.collectors << MyCollector
   end
 ```
 
 ## Notifier
 
 `show` and `tick` command uses Cline's notifier.
-Default notifier is STDOUT.
+Default notifier is $stdout.
 
 ### Custom Notifyer
 
-Cline's notifier required `puts` instance method.
+Cline's notifier required `puts` method.
 
 example:
 
@@ -140,9 +177,7 @@ example:
   end
 ```
 
-### Registration
-
-in ~/.cline/config
+In ~/.cline/config
 
 ```ruby
   require 'path/to/my_notifier'

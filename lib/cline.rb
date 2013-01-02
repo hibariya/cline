@@ -1,70 +1,92 @@
 # coding: utf-8
 
-here = File.dirname(__FILE__)
-$LOAD_PATH.unshift here unless $LOAD_PATH.include?(here)
+require 'fileutils'
+require 'logger'
+require 'cline/configure'
+require 'cline/version'
 
 module Cline
+  autoload :Collectors,   'cline/collectors'
+  autoload :Command,      'cline/command'
+  autoload :Notification, 'cline/notification'
+  autoload :Server,       'cline/server'
+  autoload :Client,       'cline/client'
+  autoload :NotifyIO,     'cline/notify_io'
+  autoload :ScheduledJob, 'cline/scheduled_job'
+
+  autoload :OutStreams,   'cline/notify_io' # obsolete
+
   class << self
+    attr_accessor :logger, :notifications_limit
+    attr_writer   :collectors, :notify_io, :jobs
+
     def cline_dir
       "#{ENV['HOME']}/.cline"
     end
 
     def boot
       mkdir_if_needed
-      setup_logger
-      establish_connection
       load_config_if_exists
+      load_default_config
+
+      self
     end
 
-    def mkdir_if_needed
-      path = Pathname.new(cline_dir)
-      path.mkdir unless path.directory?
+    def collectors
+      @collectors ||= []
     end
 
-    def setup_logger
-      ActiveRecord::Base.logger = Logger.new(STDOUT)
-      ActiveRecord::Base.logger.level = Logger::WARN
+    def jobs
+      @jobs ||= []
     end
 
-    def establish_connection
-      ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: "#{cline_dir}/cline.sqlite3", timeout: 10000
+    def establish_database_connection
+      require 'active_record'
+
+      ActiveRecord::Base.logger = logger
+      ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: %(#{cline_dir}/cline.sqlite3), timeout: 10000, pool: 10
+    end
+
+    def stdout
+      Thread.current[:stdout] || $stdout
+    end
+
+    def stderr
+      Thread.current[:stderr] || $stderr
+    end
+
+    def notify_io
+      @notify_io == $stdout ? stdout : @notify_io
     end
 
     def load_config_if_exists
-      config = Pathname.new("#{cline_dir}/config")
-      load config if config.exist?
+      config_file = "#{cline_dir}/config"
+
+      load config_file if File.exist?(config_file)
     end
 
-    def out_stream
-      @out_stream || STDOUT
+    def load_default_config
+      @logger              ||= default_logger
+      @notify_io           ||= stdout
+      @notifications_limit ||= nil
     end
 
-    def out_stream=(stream)
-      @out_stream = stream
+    private
+
+    def mkdir_if_needed
+      FileUtils.mkdir_p cline_dir
     end
 
-    def pool_size
-      @pool_size
+    def default_logger
+      Logger.new("#{cline_dir}/log").tap {|l| l.level = Logger::WARN }
     end
 
-    def pool_size=(pool_size)
-      @pool_size = pool_size
-    end
+    public
 
-    collectors = []
-    define_method(:collectors) { collectors }
+    # obsoletes
+    [%w(out_stream notify_io), %w(pool_size notifications_limit)].each do |obsolete, original|
+      alias_method obsolete,        original
+      alias_method %(#{obsolete}=), %(#{original}=)
+    end
   end
 end
-
-require 'logger'
-require 'pathname'
-require 'thor'
-require 'sqlite3'
-require 'active_record'
-
-require 'cline/version'
-require 'cline/configure'
-require 'cline/notification'
-require 'cline/command'
-require 'cline/collectors'
-require 'cline/out_streams'

@@ -6,18 +6,7 @@ trap :INT do
   exit
 end
 
-require_relative '../lib/cline'
+require 'cline'
 
-begin
-  Cline::Command.start
-rescue Exception
-  Pathname.new("#{Cline.cline_dir}/log").open('a') do |f|
-    f.puts '---'
-    f.puts Time.now
-    f.puts $!.class
-    f.puts $!.message
-    f.puts $!.backtrace.join("\n")
-  end
-
-  raise $!
-end
+Cline.boot
+Cline::Command.start

@@ -13,4 +13,12 @@ module ExampleGroupHelper
 
     result
   end
+
+  def wait_for_server(limit = 3)
+    limit.times do
+      sleep 2
+
+      return if Cline::Server.running?
+    end
+  end
 end
