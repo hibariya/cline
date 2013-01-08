@@ -111,7 +111,7 @@ module Cline
 
     desc :recent, 'Show recent notification'
     method_options limit: :integer
-    def recent(limit = options[:limit] || 1)
+    def recent(limit = options[:limit] || 10)
       Notification.recent_notified.limit(limit).each do |notification|
         puts notification.display_message
       end
