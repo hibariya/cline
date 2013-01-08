@@ -12,22 +12,6 @@ Gem::Specification.new do |s|
   s.summary     = %q{Show recently news on the terminal}
   s.description = %q{Show recently news on the terminal.}
 
-  s.post_install_message = <<-EOM
-    **Important changes**
-
-    `tick` command usage has changed.
-
-    `cline tick OFFSET INTERVAL' -> `cline tick INTERVAL OFFSET'
-
-    **Cline server is available**
-
-    Cline uses daemon process if it's running.
-
-    $ cline server start  # start server
-    $ cline server stop   # stop server
-    $ cline server reload # reload config file
-  EOM
-
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
